@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import studentsRouter from './routes/students.js';
+import studentsRouter from './routes/studentRoutes.js';
 import mysql from 'mysql2';
 import dotenv from 'dotenv';
 
