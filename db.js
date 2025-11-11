@@ -1,18 +1,37 @@
-import mysql from "mysql2";
+import mysql from 'mysql2';
+import dotenv from 'dotenv';
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "student_db"
+dotenv.config();
+
+console.log('Setting up database connection for students...');
+console.log('Database config:', {
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT
 });
 
-db.connect(err => {
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT || 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  charset: 'utf8mb4'
+});
+
+//testing
+pool.getConnection((err, connection) => {
   if (err) {
-    console.error("Database connection failed:", err);
+    console.error('Database connection failed:', err.message);
   } else {
-    console.log("Connected to MySQL database");
+    console.log('Connected to MySQL on Railway');
+    console.log('Database:', process.env.MYSQLDATABASE);
+    connection.release();
   }
 });
 
-export default db;
+export default pool;
